@@ -4,7 +4,8 @@
   "description": "Blog Api with expressJS",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "devstart": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,8 @@
     "mongoose": "^8.5.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
