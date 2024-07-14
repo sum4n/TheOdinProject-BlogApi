@@ -4,6 +4,9 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const express = require("express");
+// const mongoose = require("mongoose");
+require("./config/db"); // Dependency injection of db connection.
+
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
@@ -14,6 +17,6 @@ const indexRouter = require("./routes/index");
 
 app.use("/", indexRouter);
 
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
