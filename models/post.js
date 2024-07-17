@@ -19,7 +19,7 @@ PostSchema.pre("save", function (next) {
 
 // Virtual for Post' URL
 PostSchema.virtual("url").get(function () {
-  return `/post/${this._id}`;
+  return `/posts/${this._id}`;
 });
 
 module.exports = mongoose.model("Post", PostSchema);

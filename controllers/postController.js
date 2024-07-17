@@ -3,12 +3,21 @@ const asyncHandler = require("express-async-handler");
 
 // Retrieve list of all Posts
 exports.all_posts = asyncHandler(async (req, res, next) => {
-  res.json("GET all Posts: Not implemented");
+  const allPosts = await Post.find({})
+    .sort({ created_at: 1 })
+    .populate("author")
+    .exec();
+  res.json({ allPosts });
 });
 
 // Retrieve specific Post on GET
 exports.post_specific = asyncHandler(async (req, res, next) => {
-  res.json("GET specific Post: Not implemented");
+  const post = await Post.findById(req.params.postId)
+    .populate("author")
+    // Populates comments and their authors.
+    .populate({ path: "comments", populate: { path: "author", model: "User" } })
+    .exec();
+  res.json({ post });
 });
 
 // Handle Post create on POST
