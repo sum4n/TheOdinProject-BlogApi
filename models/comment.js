@@ -2,12 +2,16 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const CommentSchema = new Schema({
-  content: { type: String, required: true, maxLength: 1000 },
-  author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  created_at: { type: Date, required: true, default: Date.now },
-  updated_at: { type: Date, required: true, default: Date.now },
-});
+const CommentSchema = new Schema(
+  {
+    content: { type: String, required: true, maxLength: 1000 },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    post: { type: Schema.Types.ObjectId, ref: "Post", required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 // Middleware to update updated_at field before saving.
 CommentSchema.pre("save", function (next) {
