@@ -73,9 +73,48 @@ exports.post_create = [
 ];
 
 // Handle Post update on POST
-exports.post_update = asyncHandler(async (req, res, next) => {
-  res.json("Update a Post: Not implemented");
-});
+exports.post_update = [
+  // Validate and sanitize fields.
+  body("title")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Title must be specified!")
+    .isLength({ max: 400 })
+    .withMessage("Must be within 400 character limit!"),
+  body("content")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Content must be specified!"),
+
+  // Process request after validation and sanitization.
+  asyncHandler(async (req, res, next) => {
+    // Extract validation errors from a request.
+    const errors = validationResult(req);
+
+    // Get logged in user who must be admin.
+    // TODO: get logged in admin user.
+    // const user = await User.find({ user_type: "admin" }).exec();
+
+    // Create Post object with escaped and trimmed data.
+    const post = new Post({
+      title: req.body.title,
+      content: req.body.content,
+      // author: user[0],
+      _id: req.params.postId,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Send sanitized values and errors messages.
+      res.json({ post, errors: errors.array() });
+    } else {
+      // Data is valid.
+      // Update the Post.
+      await Post.findByIdAndUpdate(req.params.postId, post, {});
+      res.json({ Message: "Post updated!" });
+    }
+  }),
+];
 
 // Handle Post on DELETE
 exports.post_delete = asyncHandler(async (req, res, next) => {
