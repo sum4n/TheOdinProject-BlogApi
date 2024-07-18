@@ -33,8 +33,8 @@ async function main() {
 
   // Add collections
   await createUsers();
-  await createComments();
   await createPosts();
+  await createComments();
 
   console.log("Debug: Closing mongoose");
   mongoose.connection.close();
@@ -92,39 +92,13 @@ async function createUsers() {
   ]);
 }
 
-// Add Comments
-async function commentCreate(index, content, author) {
-  const commentDetail = { content: content, author: author };
-
-  const comment = new Comment(commentDetail);
-
-  await comment.save();
-  comments[index] = comment;
-  console.log(`Added comment: ${content}`);
-}
-
-async function createComments() {
-  console.log("Adding comments");
-  await Promise.all([
-    commentCreate(0, "Comment 1", users[1]),
-    commentCreate(1, "Comment 2", users[2]),
-    commentCreate(2, "Comment 3", users[2]),
-    commentCreate(3, "Comment 4", users[3]),
-    commentCreate(4, "Comment 5", users[4]),
-  ]);
-}
-
 // Add Posts
-async function postCreate(index, title, content, author, comments) {
+async function postCreate(index, title, content, author) {
   const postDetail = {
     title: title,
     content: content,
     author: author,
   };
-
-  if (comments != false) {
-    postDetail.comments = comments;
-  }
 
   const post = new Post(postDetail);
 
@@ -136,10 +110,32 @@ async function postCreate(index, title, content, author, comments) {
 async function createPosts() {
   console.log("Adding posts");
   await Promise.all([
-    postCreate(0, "Title 1", "Post Content 1", users[0], [comments[0]]),
-    postCreate(1, "Title 2", "Post Content 2", users[0], [comments[1]]),
-    postCreate(2, "Title 3", "Post Content 3", users[0], [comments[2]]),
-    postCreate(3, "Title 4", "Post Content 4", users[0], [comments[3]]),
-    postCreate(4, "Title 5", "Post Content 5", users[0], [comments[4]]),
+    postCreate(0, "Title 1", "Post Content 1", users[0]),
+    postCreate(1, "Title 2", "Post Content 2", users[0]),
+    postCreate(2, "Title 3", "Post Content 3", users[0]),
+    postCreate(3, "Title 4", "Post Content 4", users[0]),
+    postCreate(4, "Title 5", "Post Content 5", users[0]),
+  ]);
+}
+
+// Add Comments
+async function commentCreate(index, content, author, post) {
+  const commentDetail = { content: content, author: author, post: post };
+
+  const comment = new Comment(commentDetail);
+
+  await comment.save();
+  comments[index] = comment;
+  console.log(`Added comment: ${content}`);
+}
+
+async function createComments() {
+  console.log("Adding comments");
+  await Promise.all([
+    commentCreate(0, "Comment 1", users[1], posts[0]),
+    commentCreate(1, "Comment 2", users[2], posts[1]),
+    commentCreate(2, "Comment 3", users[2], posts[2]),
+    commentCreate(3, "Comment 4", users[3], posts[3]),
+    commentCreate(4, "Comment 5", users[4], posts[4]),
   ]);
 }
