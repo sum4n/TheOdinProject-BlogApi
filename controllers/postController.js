@@ -118,5 +118,8 @@ exports.post_update = [
 
 // Handle Post on DELETE
 exports.post_delete = asyncHandler(async (req, res, next) => {
-  res.json("Delete a Post: Not implemented");
+  // Delete the post
+  await Post.findByIdAndDelete(req.params.postId);
+
+  res.json({ Message: "The post have been deleted." });
 });
